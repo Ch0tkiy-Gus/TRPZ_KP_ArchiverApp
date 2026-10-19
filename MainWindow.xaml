@@ -1,0 +1,27 @@
+<Window x:Class="ArchiverApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Архіватор" Height="450" Width="600" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Список архівів:" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+
+        <DataGrid x:Name="ArchivesDataGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Назва" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Формат" Binding="{Binding Format}" Width="80"/>
+                <DataGridTextColumn Header="Checksum" Binding="{Binding Checksum}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Перевірити цілісність" Width="150" Height="30" Margin="0,0,10,0" Click="CheckIntegrity_Click"/>
+            <Button Content="Створити архів" Width="120" Height="30" Click="CreateArchive_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

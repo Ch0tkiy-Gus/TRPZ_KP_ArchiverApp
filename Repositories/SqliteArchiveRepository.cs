@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using System.Data;
-using Dapper;
 using System.Linq;
+using Dapper;
 using ArchiverApp.Models;
 
 namespace ArchiverApp.Repositories
@@ -9,6 +10,7 @@ namespace ArchiverApp.Repositories
     {
         void Save(Archive archive);
         Archive GetById(string id);
+        IEnumerable<Archive> GetAllArchives();
     }
 
     public class SqliteArchiveRepository : IArchiveRepository
@@ -18,6 +20,12 @@ namespace ArchiverApp.Repositories
         public SqliteArchiveRepository(IDbConnection db)
         {
             _db = db;
+        }
+
+        public IEnumerable<Archive> GetAllArchives()
+        {
+            string sql = "SELECT * FROM Archives";
+            return _db.Query<Archive>(sql).ToList();
         }
 
         public void Save(Archive archive)
@@ -56,7 +64,7 @@ namespace ArchiverApp.Repositories
         {
             string sql = "SELECT * FROM Archives WHERE Id = @Id; SELECT * FROM Metadata WHERE ArchiveId = @Id; SELECT * FROM ArchiveItems WHERE ArchiveId = @Id;";
             using var multi = _db.QueryMultiple(sql, new { Id = id });
-            
+
             var archive = multi.ReadSingleOrDefault<Archive>();
             if (archive != null)
             {

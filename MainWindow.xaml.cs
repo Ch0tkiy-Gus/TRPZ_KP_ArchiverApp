@@ -13,12 +13,21 @@ namespace ArchiverApp
             InitializeComponent();
             var db = new SqliteConnection("Data Source=archiver.db");
             _repo = new SqliteArchiveRepository(db);
+            LoadArchives();
+        }
+
+        private void LoadArchives()
+        {
+            ArchivesDataGrid.ItemsSource = _repo.GetAllArchives();
         }
 
         private void CreateArchive_Click(object sender, RoutedEventArgs e)
         {
             var createWindow = new CreateArchiveWindow(_repo);
-            createWindow.ShowDialog();
+            if (createWindow.ShowDialog() == true)
+            {
+                LoadArchives();
+            }
         }
 
         private void CheckIntegrity_Click(object sender, RoutedEventArgs e)

@@ -10,3 +10,4 @@ namespace ArchiverApp.Adapters
         }
     }
 }
+// стороння бібліотека для ace (заглушка)

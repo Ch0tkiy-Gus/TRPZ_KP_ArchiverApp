@@ -17,3 +17,4 @@ namespace ArchiverApp.Adapters
         }
     }
 }
+// адаптер щоб tar.gz працював через ICompressionStrategy

@@ -21,13 +21,13 @@ namespace ArchiverApp.Repositories
         {
             _db = db;
         }
-
+// дістає всі архіви з бд для таблиці
         public IEnumerable<Archive> GetAllArchives()
         {
             string sql = "SELECT * FROM Archives";
             return _db.Query<Archive>(sql).ToList();
         }
-
+// зберігає архів, метадані і файли в бд
         public void Save(Archive archive)
         {
             _db.Open();
@@ -59,7 +59,7 @@ namespace ArchiverApp.Repositories
                 _db.Close();
             }
         }
-
+// шукає конкретний архів з його файлами по id
         public Archive GetById(string id)
         {
             string sql = "SELECT * FROM Archives WHERE Id = @Id; SELECT * FROM Metadata WHERE ArchiveId = @Id; SELECT * FROM ArchiveItems WHERE ArchiveId = @Id;";

@@ -10,3 +10,4 @@ namespace ArchiverApp.Strategies
         }
     }
 }
+// пакування в rar (заглушка)

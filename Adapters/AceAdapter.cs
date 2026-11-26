@@ -17,3 +17,4 @@ namespace ArchiverApp.Adapters
         }
     }
 }
+// адаптер щоб ace працював через ICompressionStrategy

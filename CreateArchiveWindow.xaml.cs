@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using ArchiverApp.Models;
 using ArchiverApp.Repositories;
 using ArchiverApp.Strategies;
@@ -12,6 +15,7 @@ namespace ArchiverApp
     {
         private readonly SqliteArchiveRepository _repo;
         private ICompressionStrategy _compressionStrategy;
+        private List<string> _selectedFiles = new List<string>();
 
         public CreateArchiveWindow(SqliteArchiveRepository repo)
         {
@@ -19,8 +23,42 @@ namespace ArchiverApp
             _repo = repo;
         }
 
+        // вибір файлів для архіву
+        private void SelectFiles_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog
+            {
+                Multiselect = true,
+                Title = "Оберіть файли для архіву"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                foreach (var file in dialog.FileNames)
+                {
+                    if (!_selectedFiles.Contains(file))
+                    {
+                        _selectedFiles.Add(file);
+                        FilesListBox.Items.Add(Path.GetFileName(file));
+                    }
+                }
+            }
+        }
+// перевірка полів і збереження архіву в бд
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(NameTextBox.Text))
+            {
+                MessageBox.Show("Введіть назву архіву.");
+                return;
+            }
+
+            if (_selectedFiles.Count == 0)
+            {
+                MessageBox.Show("Оберіть хоча б один файл.");
+                return;
+            }
+
             var format = (FormatComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
 
             switch (format)
@@ -40,7 +78,7 @@ namespace ArchiverApp
                     break;
             }
 
-            _compressionStrategy.Compress("data/source_folder", $"archive{format}");
+            _compressionStrategy.Compress("data/source_folder", $"{NameTextBox.Text}{format}");
 
             var archive = new Archive
             {
@@ -54,13 +92,16 @@ namespace ArchiverApp
                 }
             };
 
-            archive.Items.Add(new ArchiveItem
+            foreach (var filePath in _selectedFiles)
             {
-                InternalPath = "data/test.txt",
-                IsDirectory = false,
-                OriginalSize = 1024,
-                PackedSize = 512
-            });
+                archive.Items.Add(new ArchiveItem
+                {
+                    InternalPath = Path.GetFileName(filePath),
+                    IsDirectory = false,
+                    OriginalSize = 1024,
+                    PackedSize = 512
+                });
+            }
 
             _repo.Save(archive);
             DialogResult = true;

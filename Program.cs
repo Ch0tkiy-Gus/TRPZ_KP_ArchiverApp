@@ -28,3 +28,4 @@ namespace ArchiverApp
         }
     }
 }
+// створення таблиць sqlite при першому запуску

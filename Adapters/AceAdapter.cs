@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ArchiverApp.Strategies;
 
 namespace ArchiverApp.Adapters
@@ -11,9 +12,9 @@ namespace ArchiverApp.Adapters
             _aceLib = aceLib;
         }
 
-        public void Compress(string sourceDirectory, string archivePath)
+        public void Compress(List<string> files, string archivePath)
         {
-            _aceLib.PackToAce(sourceDirectory, archivePath);
+            _aceLib.PackToAce(string.Join(", ", files), archivePath);
         }
     }
 }

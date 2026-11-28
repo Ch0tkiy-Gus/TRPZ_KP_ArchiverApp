@@ -78,7 +78,12 @@ namespace ArchiverApp
                     break;
             }
 
-            _compressionStrategy.Compress("data/source_folder", $"{NameTextBox.Text}{format}");
+           // папка для збереження готових архівів
+            string archivesDir = Path.Combine(Directory.GetCurrentDirectory(), "Archives");
+            Directory.CreateDirectory(archivesDir);
+
+            string archivePath = Path.Combine(archivesDir, $"{NameTextBox.Text}{format}");
+            _compressionStrategy.Compress(_selectedFiles, archivePath);
 
             var archive = new Archive
             {

@@ -1,13 +1,29 @@
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 
 namespace ArchiverApp.Strategies
 {
+    // пакування в zip
     public class ZipCompressionStrategy : ICompressionStrategy
     {
-        public void Compress(string sourceDirectory, string archivePath)
+        public void Compress(List<string> files, string archivePath)
         {
-            Debug.WriteLine($"Пакування {sourceDirectory} у ZIP архів {archivePath}");
+            if (File.Exists(archivePath))
+            {
+                File.Delete(archivePath);
+            }
+
+            using (var zip = ZipFile.Open(archivePath, ZipArchiveMode.Create))
+            {
+                foreach (var file in files)
+                {
+                    if (File.Exists(file))
+                    {
+                        zip.CreateEntryFromFile(file, Path.GetFileName(file));
+                    }
+                }
+            }
         }
     }
 }
-// пакування в zip (заглушка)

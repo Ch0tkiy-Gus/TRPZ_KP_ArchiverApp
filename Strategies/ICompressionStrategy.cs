@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace ArchiverApp.Strategies
 {
+    // спільний інтерфейс для всіх форматів архівів
     public interface ICompressionStrategy
     {
-        void Compress(string sourceDirectory, string archivePath);
+        void Compress(List<string> files, string archivePath);
     }
 }
-// спільний інтерфейс для всіх форматів архівів
